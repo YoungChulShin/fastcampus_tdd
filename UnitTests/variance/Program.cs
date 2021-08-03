@@ -1,46 +1,38 @@
 ﻿using System;
+using System.Linq;
 
 namespace variance
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) => System.Console.WriteLine(args.Length switch
         {
-            int n = args.Length;
+        0 => "입력된 데이터가 없습니다.",
+        1 => "데이터가 부족해 분산을 계산할 수 없습니다",
+        _ => GetVarianceOutput(args)
+        });
 
-            if (n == 0)
-            {
-                System.Console.WriteLine("입력된 데이터가 없습니다.");
-                return;
-            }
-
-            if (n == 1)
-            {
-                System.Console.WriteLine("데이터가 부족해 분산을 계산할 수 없습니다");
-                return;
-            }
-
-            double[] source = new double[n];
-            for (int i = 0; i < n; i++) {
-                source[i] = double.Parse(args[i]);
-            }   
-
-            double sum = 0.0;
-            for (int i = 0; i < n; i++) {
-                sum += source[i];
-            }
-
-            double mean = sum / n;
-
-            double sumOfSquares = 0.0;
-            for (int i = 0; i < n; i++) {
-                sumOfSquares += (source[i] - mean) * (source[i] - mean);
-            }
-
-            double variance = sumOfSquares / (n - 1);
-            System.Console.WriteLine($"분산: {variance}");   
+        private static string GetVarianceOutput(string[] args)
+        {
+        double[] source = ParseArguments(args);
+        double mean = CalculateMean(source);
+        double sumOfSquares = CalculateSumOfSquares(source, mean);
+        double variance = sumOfSquares / (args.Length - 1);
+        string output = $"분산: {variance}";
+        return output;
         }
-    }
+
+        private static double CalculateSumOfSquares(double[] source, double mean)
+        {
+            return source.Select(x => x - mean)
+                        .Select(x => x * x)
+                        .Sum();
+        }
+
+        private static double CalculateMean(double[] source) => source.Average();
+
+        private static double[] ParseArguments(string[] args) => args.Select(double.Parse).ToArray();
+  }
 }
 
 // 09:23
