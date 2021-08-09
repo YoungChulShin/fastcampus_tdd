@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class AppModel_specs {
 
@@ -65,7 +66,32 @@ public class AppModel_specs {
     String actual = sut.flushOutput();
 
     assertThat(actual).isEqualTo("Your guess is too low." + NEW_LINE + "Enter your guess: ");
-
   }
 
+  @ParameterizedTest
+  @CsvSource({ "50, 60", "80, 81"})
+  void sut_correctly_prints_too_hight_message_in_single_player_game(int answer, int guess) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(answer));
+    sut.processInput("1");
+    sut.flushOutput();
+    sut.processInput(Integer.toString(guess));
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).isEqualTo("Your guess is too high." + NEW_LINE + "Enter your guess: ");
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {1, 3, 10, 100})
+  void sut_correctly_prints_correct_message_in_single_player_game(int answer) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(answer));
+    sut.processInput("1");
+    sut.flushOutput();
+    int guess = answer;
+    sut.processInput(Integer.toString(guess));
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).startsWith("Correct! ");
+  }
 }
