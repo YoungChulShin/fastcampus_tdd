@@ -50,6 +50,7 @@ public final class AppModel {
     } else {
       output = "Correct! " + tries + (tries == 1 ? " guess." : " guesses.") + NEW_LINE
           + SELECT_MODE_MESSAGE;
+      singlePlayerMode = false;
     }
   }
 
