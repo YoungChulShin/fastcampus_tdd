@@ -94,4 +94,30 @@ public class AppModel_specs {
 
     assertThat(actual).startsWith("Correct! ");
   }
+
+  @ParameterizedTest
+  @ValueSource(ints = {1, 10, 100})
+  void sut_correctly_prints_guess_count_if_single_player_game_finished(int fails) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("1");
+    for (int i = 0; i < fails; i++) {
+      sut.processInput("30");
+    }
+    sut.processInput("50");
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).contains((fails + 1) + " guesses." + NEW_LINE);
+  }
+
+  @Test
+  void sut_correctly_prints_one_guess_if_single_player_game_finished() {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("1");
+    sut.processInput("50");
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).contains("1 guess.");
+  }
 }

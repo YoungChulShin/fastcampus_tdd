@@ -9,6 +9,7 @@ public final class AppModel {
   private String output;
   private int answer;
   private boolean singlePlayerMode;
+  private int tries;
 
   public AppModel(PositiveIntegerGenerator generator) {
     completed = false;
@@ -18,7 +19,7 @@ public final class AppModel {
         + "Enter selection: ";
     answer = generator.generateLessThanOrEqualToHundred();
     singlePlayerMode = false;
-
+    tries = 0;
   }
 
   public boolean isCompleted() {
@@ -38,13 +39,14 @@ public final class AppModel {
   }
 
   private void processSinglePlayerGame(String input) {
+    tries++;
     int guess = Integer.parseInt(input);
     if (guess < answer) {
       output = "Your guess is too low." + NEW_LINE + "Enter your guess: ";
     } else if (guess > answer) {
       output = "Your guess is too high." + NEW_LINE + "Enter your guess: ";
     } else {
-      output = "Correct! ";
+      output = "Correct! " + tries + (tries == 1 ? " guess." : " guesses.") + NEW_LINE;
     }
   }
 
