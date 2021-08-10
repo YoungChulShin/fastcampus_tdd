@@ -10,6 +10,8 @@ public final class AppModel {
       + "2: Multiplayer name" + NEW_LINE
       + "3: Exit" + NEW_LINE
       + "Enter selection: ";
+
+  private final PositiveIntegerGenerator generator;
   private boolean completed;
   private String output;
   private int answer;
@@ -17,9 +19,9 @@ public final class AppModel {
   private int tries;
 
   public AppModel(PositiveIntegerGenerator generator) {
+    this.generator = generator;
     completed = false;
     output = SELECT_MODE_MESSAGE;
-    answer = generator.generateLessThanOrEqualToHundred();
     singlePlayerMode = false;
     tries = 0;
   }
@@ -60,6 +62,7 @@ public final class AppModel {
           + "I'm thinking of a number between 1 and 100." + NEW_LINE
           + "Enter your guess: ";
       singlePlayerMode = true;
+      answer = generator.generateLessThanOrEqualToHundred();
     } else {
       completed = true;
     }

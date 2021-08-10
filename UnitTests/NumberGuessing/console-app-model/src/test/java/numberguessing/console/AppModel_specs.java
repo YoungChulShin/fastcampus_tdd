@@ -3,6 +3,7 @@ package numberguessing.console;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.stream.Stream;
 import numberguessing.PositiveIntegerGeneratorStub;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -146,5 +147,23 @@ public class AppModel_specs {
     boolean actual = sut.isCompleted();
 
     assertTrue(actual);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = "100, 10, 1")
+  void sut_generates_answers_for_each_game(String source) {
+    int[] answers = Stream.of(source.split(","))
+        .map(String::trim)
+        .mapToInt(Integer::parseInt)
+        .toArray();
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(answers));
+    for (int answer : answers) {
+      sut.processInput("1");
+      sut.flushOutput();
+      sut.processInput(Integer.toString(answer));
+    }
+
+    String actual = sut.flushOutput();
+    assertThat(actual).startsWith("Correct! ");
   }
 }
