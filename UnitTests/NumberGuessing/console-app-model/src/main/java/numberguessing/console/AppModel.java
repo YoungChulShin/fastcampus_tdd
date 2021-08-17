@@ -74,18 +74,16 @@ public final class AppModel {
       int guess = Integer.parseInt(input);
       if (guess < answer) {
         outputBuffer.append(player + "'s guess is too low." + NEW_LINE);
+        return getMultiPlayerGameProcessor(players, answer, tries + 1);
       } else if (guess > answer) {
         outputBuffer.append(player + "'s guess is too high." + NEW_LINE);
+        return getMultiPlayerGameProcessor(players, answer, tries + 1);
       } else {
         outputBuffer.append("Correct! ");
         outputBuffer.append(player + " wins." + NEW_LINE);
-        outputBuffer.append("1: Single player game" + NEW_LINE
-            + "2: Multiplayer name" + NEW_LINE
-            + "3: Exit" + NEW_LINE
-            + "Enter selection: ");
-        return input2 -> null;
+        outputBuffer.append(SELECT_MODE_MESSAGE);
+        return this::processModeSelection;
       }
-      return getMultiPlayerGameProcessor(players, answer, tries + 1);
     };
   }
 

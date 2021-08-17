@@ -329,4 +329,18 @@ public class AppModel_specs {
         + "3: Exit" + NEW_LINE
         + "Enter selection: ");
   }
+
+  @Test
+  void sut_returns_to_mode_selection_if_multiplayer_game_finished() {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("2");
+    sut.processInput("Foo, Bar, Baz");
+    sut.processInput("20");
+    sut.processInput("50");
+    sut.processInput("3");
+
+    boolean actual = sut.isCompleted();
+
+    assertTrue(actual);
+  }
 }
