@@ -46,6 +46,13 @@ public final class AppModel {
           + "Enter your guess: ";
       int answer = generator.generateLessThanOrEqualToHundred();
       return getSinglePlayerGameProcessor(answer, 1);
+    } else if (input.equals("2")) {
+      output = "Multiplayer game" + NEW_LINE + "Enter player name separated with comma: ";
+      return input2 -> {
+        String[] players = input2.split(",");
+        output = "I'm thinking of a number between 1 and 100." + " " + "Enter " + players[0] + "'s guess: ";
+        return null;
+      };
     } else {
       completed = true;
       return null;

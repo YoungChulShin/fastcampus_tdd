@@ -166,4 +166,41 @@ public class AppModel_specs {
     String actual = sut.flushOutput();
     assertThat(actual).startsWith("Correct! ");
   }
+
+  @Test
+  void sut_correctly_prints_multiplayer_game_setup_message() {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.flushOutput();
+    sut.processInput("2");
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).isEqualTo("Multiplayer game" + NEW_LINE + "Enter player name separated with comma: ");
+  }
+
+  @Test
+  void sut_correctly_prints_multiplayer_game_start_message() {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.flushOutput();
+    sut.processInput("2");
+    sut.flushOutput();
+    sut.processInput("Foo, Bar");
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).startsWith("I'm thinking of a number between 1 and 100.");
+  }
+
+
+  @ParameterizedTest
+  @CsvSource({ "Foo, Bar, Baz", "Bar, Baz, Foo", "Baz, Foo, Bar" })
+  void sut_correctly_prompts_first_player_name(String player1, String player2, String player3) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("2");
+    sut.processInput(String.join(", ", player1, player2, player3));
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).endsWith("Enter " + player1 + "'s guess: ");
+  }
 }
