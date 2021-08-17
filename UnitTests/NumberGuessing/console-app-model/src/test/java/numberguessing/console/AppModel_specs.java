@@ -209,7 +209,9 @@ public class AppModel_specs {
   void sut_correctly_prompts_second_player_name(String player1, String player2, String player3) {
     AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
     sut.processInput("2");
+    sut.flushOutput();
     sut.processInput(String.join(", ", player1, player2, player3));
+    sut.flushOutput();
     sut.processInput("10");
 
     String actual = sut.flushOutput();
