@@ -70,7 +70,7 @@ public final class AppModel {
   private Processor startMultiPlayerGame() {
     return input -> {
       Object[] players = Stream.of(input.split(",")).map(i -> i.trim()).toArray();
-      print("I'm thinking of a number between 1 and 100.");
+      println("I'm thinking of a number between 1 and 100.");
       int answer = generator.generateLessThanOrEqualToHundred();
       return getMultiPlayerGameProcessor(players, answer, 1);
     };
