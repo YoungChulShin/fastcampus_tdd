@@ -252,7 +252,7 @@ public class AppModel_specs {
   @ParameterizedTest
   @CsvSource({ "50, 40, 1, Foo", "30, 29, 2, Bar" })
   void sut_correctly_print_too_low_message_in_multiplayer_game(int answer, int guess, int fails, String lastPlayer) {
-    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(answer));
     sut.processInput("2");
     sut.processInput("Foo, Bar, Baz");
     for (int i = 0; i < fails - 1; i++) {
@@ -264,5 +264,53 @@ public class AppModel_specs {
     String actual = sut.flushOutput();
 
     assertThat(actual).startsWith(lastPlayer + "'s guess is too low." + NEW_LINE);
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "50, 60, 1, Foo", "9, 81, 2, Bar" })
+  void sut_correctly_print_too_hight_message_in_multiplayer_game(int answer, int guess, int fails, String lastPlayer) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(answer));
+    sut.processInput("2");
+    sut.processInput("Foo, Bar, Baz");
+    for (int i = 0; i < fails - 1; i++) {
+      sut.processInput(Integer.toString(guess));
+    }
+    sut.flushOutput();
+    sut.processInput(Integer.toString(guess));
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).startsWith(lastPlayer + "'s guess is too high." + NEW_LINE);
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = { 1, 10, 100 })
+  void sut_correctly_print_correct_message_in_multiplayer_game(int answer) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(answer));
+    sut.processInput("2");
+    sut.processInput("Foo, Bar, Baz");
+    sut.flushOutput();
+    sut.processInput(Integer.toString(answer));
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).startsWith("Correct! ");
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "0, Foo", "1, Bar", "2, Baz", "99, Foo", "100, Bar"})
+  void sut_correctly_print_winner_if_multiplayer_game_finished(int fails, String winner) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("2");
+    sut.processInput("Foo, Bar, Baz");
+    for (int i = 0; i < fails; i++) {
+      sut.processInput("30");
+    }
+    sut.flushOutput();
+    sut.processInput("50");
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).contains(winner + " wins." + NEW_LINE);
   }
 }
