@@ -67,8 +67,11 @@ public final class AppModel {
   }
 
   private Processor getMultiPlayerGameProcessor(Object[] players, int tries) {
-    outputBuffer.append("Enter " + players[tries - 1] + "'s guess: ");
-    return input -> getMultiPlayerGameProcessor(players, tries + 1);
+    outputBuffer.append("Enter " + players[(tries - 1) % players.length] + "'s guess: ");
+    return input -> {
+      outputBuffer.append(players[(tries - 1) % players.length] + "'s guess is too low." + NEW_LINE);
+      return getMultiPlayerGameProcessor(players, tries + 1);
+    };
   }
 
   private Processor getSinglePlayerGameProcessor(int answer, int tries) {

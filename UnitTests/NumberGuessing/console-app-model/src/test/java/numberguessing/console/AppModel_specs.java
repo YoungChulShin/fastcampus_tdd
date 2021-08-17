@@ -232,4 +232,37 @@ public class AppModel_specs {
 
     assertThat(actual).endsWith("Enter " + player3 + "'s guess: ");
   }
+
+  @ParameterizedTest
+  @CsvSource({ "Foo, Bar, Baz", "Bar, Baz, Foo", "Baz, Foo, Bar" })
+  void sut_correctly_rounds_players(String player1, String player2, String player3) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("2");
+    sut.processInput(String.join(", ", player1, player2, player3));
+    sut.processInput("10");
+    sut.processInput("90");
+    sut.flushOutput();
+    sut.processInput("10");
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).endsWith("Enter " + player1 + "'s guess: ");
+  }
+
+  @ParameterizedTest
+  @CsvSource({ "50, 40, 1, Foo", "30, 29, 2, Bar" })
+  void sut_correctly_print_too_low_message_in_multiplayer_game(int answer, int guess, int fails, String lastPlayer) {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("2");
+    sut.processInput("Foo, Bar, Baz");
+    for (int i = 0; i < fails - 1; i++) {
+      sut.processInput(Integer.toString(guess));
+    }
+    sut.flushOutput();
+    sut.processInput(Integer.toString(guess));
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).startsWith(lastPlayer + "'s guess is too low." + NEW_LINE);
+  }
 }
