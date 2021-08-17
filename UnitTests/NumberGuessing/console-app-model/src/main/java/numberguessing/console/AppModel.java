@@ -79,6 +79,11 @@ public final class AppModel {
       } else {
         outputBuffer.append("Correct! ");
         outputBuffer.append(player + " wins." + NEW_LINE);
+        outputBuffer.append("1: Single player game" + NEW_LINE
+            + "2: Multiplayer name" + NEW_LINE
+            + "3: Exit" + NEW_LINE
+            + "Enter selection: ");
+        return input2 -> null;
       }
       return getMultiPlayerGameProcessor(players, answer, tries + 1);
     };

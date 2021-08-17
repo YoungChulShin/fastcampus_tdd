@@ -313,4 +313,20 @@ public class AppModel_specs {
 
     assertThat(actual).contains(winner + " wins." + NEW_LINE);
   }
+
+  @Test
+  void sut_print_select_mode_message_if_multiplayer_game_finished() {
+    AppModel sut = new AppModel(new PositiveIntegerGeneratorStub(50));
+    sut.processInput("2");
+    sut.processInput("Foo, Bar, Baz");
+    sut.flushOutput();
+    sut.processInput("50");
+
+    String actual = sut.flushOutput();
+
+    assertThat(actual).endsWith("1: Single player game" + NEW_LINE
+        + "2: Multiplayer name" + NEW_LINE
+        + "3: Exit" + NEW_LINE
+        + "Enter selection: ");
+  }
 }
