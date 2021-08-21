@@ -1,9 +1,11 @@
 package productimporter.suppliers.wayneenterprises;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import productimporter.Pricing;
 import productimporter.Product;
 import productimporter.ProductImporter;
 
@@ -24,7 +26,11 @@ public final class WayneEnterprisesProductImporter implements ProductImporter {
 //        .collect(Collectors.toList());
 
     return StreamSupport.stream(datasource.fetchProducts().spliterator(), false)
-        .map(x -> new Product("WAYNE", null, null, null))
+        .map(x -> new Product(
+            "WAYNE",
+            x.getId(),
+            x.getTitle(),
+            new Pricing(new BigDecimal(x.getListPrice()), new BigDecimal(x.getListPrice() - x.getSellingPrice()))))
         .collect(Collectors.toList());
   }
 }
