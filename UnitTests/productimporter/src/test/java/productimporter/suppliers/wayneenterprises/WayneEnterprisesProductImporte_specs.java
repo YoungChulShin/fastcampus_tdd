@@ -17,4 +17,15 @@ public class WayneEnterprisesProductImporte_specs {
 
     Assertions.assertThat(actual).hasSize(source.length);
   }
+
+  @ParameterizedTest
+  @DomainArgumentsSource
+  void sut_correctly_sets_supplier_name(WayneEnterprisesProduct[] source) {
+    var stub = new WayneEnterprisesProductSourceStub(source);
+    var sut = new WayneEnterprisesProductImporter(stub);
+
+    Iterable<Product> actual = sut.fetchProducts();
+
+    Assertions.assertThat(actual).allMatch(x -> x.getSupplierName().equals("WAYNE"));
+  }
 }

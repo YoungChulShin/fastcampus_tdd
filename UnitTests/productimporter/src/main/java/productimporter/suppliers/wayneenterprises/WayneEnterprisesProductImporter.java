@@ -23,8 +23,8 @@ public final class WayneEnterprisesProductImporter implements ProductImporter {
 //        .map(translator::translateProduct)
 //        .collect(Collectors.toList());
 
-    ArrayList<WayneEnterprisesProduct> products = new ArrayList<>();
-    datasource.fetchProducts().forEach(products::add);
-    return Arrays.asList(new Product[products.size()]);
+    return StreamSupport.stream(datasource.fetchProducts().spliterator(), false)
+        .map(x -> new Product("WAYNE", null, null, null))
+        .collect(Collectors.toList());
   }
 }
