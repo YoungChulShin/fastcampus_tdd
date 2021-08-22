@@ -1,6 +1,7 @@
 package productimporter;
 
 public final class ProductSynchronizer {
+
   private final ProductImporter importer;
   private final ProductValidator validator;
   private final ProductInventory inventory;
@@ -16,9 +17,7 @@ public final class ProductSynchronizer {
 
   public void run() {
     for (Product product : importer.fetchProducts()) {
-      if (validator.isValid(product)) {
-        inventory.upsertProduct(product);
-      }
+      inventory.upsertProduct(product);
     }
   }
 }
