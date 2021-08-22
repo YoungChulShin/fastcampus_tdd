@@ -1,8 +1,16 @@
 package productimporter;
 
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import productimporter.suppliers.wayneenterprises.WayneEnterprisesProduct;
 import productimporter.suppliers.wayneenterprises.WayneEnterprisesProductImporter;
@@ -42,5 +50,28 @@ public class ProductSynchronizer_specs {
 
     // then
     Assertions.assertThat(spy.getLog()).isEmpty();
+  }
+
+  @Test
+  void sut_really_does_not_save_invalid_product() {
+    // given
+    var pricing = new Pricing(BigDecimal.TEN, BigDecimal.ONE);
+    var product = new Product("supplierName", "productCode", "productName", pricing);
+
+    ProductImporter importer = mock(ProductImporter.class);
+    when(importer.fetchProducts()).thenReturn(Collections.singletonList(product));
+
+    ProductValidator validator = mock(ProductValidator.class);
+    when(validator.isValid(product)).thenReturn(false);
+
+    ProductInventory inventory = mock(ProductInventory.class);
+
+    var sut = new ProductSynchronizer(importer, validator, inventory);
+
+    // when
+    sut.run();
+
+    // then
+    verify(inventory, never()).upsertProduct(product);
   }
 }
