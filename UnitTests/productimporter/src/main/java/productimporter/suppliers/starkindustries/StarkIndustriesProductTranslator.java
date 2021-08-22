@@ -1,5 +1,9 @@
 package productimporter.suppliers.starkindustries;
 
-public class StarkIndustriesProductTranslator {
+import productimporter.Product;
 
+public class StarkIndustriesProductTranslator {
+  public Product translate(StarkIndustriesProduct source) {
+    return null;
+  }
 }
