@@ -1,6 +1,5 @@
 package productimporter;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import org.assertj.core.api.Assertions;
@@ -24,5 +23,24 @@ public class ProductSynchronizer_specs {
 
     Iterable<Product> expected = importer.fetchProducts();
     Assertions.assertThat(spy.getLog()).usingRecursiveFieldByFieldElementComparator().containsAll(expected);
+  }
+
+  @ParameterizedTest
+  @DomainArgumentsSource
+  void sut_does_not_save_invalid_product(WayneEnterprisesProduct product) {
+    // given
+    var lowerBound = new BigDecimal(product.getListPrice() + 10000);
+    var validator = new ListPriceFilter(lowerBound);
+
+    var stub = new WayneEnterprisesProductSourceStub(product);
+    var importer = new WayneEnterprisesProductImporter(stub);
+    var spy = new ProductInventorySpy();
+    var sut = new ProductSynchronizer(importer, validator, spy);
+
+    // when
+    sut.run();
+
+    // then
+    Assertions.assertThat(spy.getLog()).isEmpty();
   }
 }
