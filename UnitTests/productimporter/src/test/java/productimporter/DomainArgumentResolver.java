@@ -2,6 +2,7 @@ package productimporter;
 
 import java.util.Optional;
 import java.util.Random;
+import productimporter.suppliers.starkindustries.StarkIndustriesProductArgumentResolver;
 import productimporter.suppliers.wayneenterprises.WayneEnterprisesProductArgumentResolver;
 
 public interface DomainArgumentResolver {
@@ -11,8 +12,8 @@ public interface DomainArgumentResolver {
   static Random random = new Random();
 
   static DomainArgumentResolver instance = new CompositeArgumentResolver(
-//      new ProductArgumentResolver(),
-//      new StarkIndustriesProductArgumentResolver(),
+      new ProductArgumentResolver(),
+      new StarkIndustriesProductArgumentResolver(),
       new WayneEnterprisesProductArgumentResolver()
   );
 }
