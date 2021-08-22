@@ -6,7 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import productimporter.DomainArgumentsSource;
 import productimporter.Product;
 
-public class WayneEnterprisesProductImporte_specs {
+public class WayneEnterprisesProductImporter_specs {
 
   @ParameterizedTest
   @DomainArgumentsSource
